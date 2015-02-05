@@ -1,0 +1,77 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+
+        <div class="panel-heading">
+          Billable Vs Bench
+        </div>
+
+        <div class="panel-body" ng-controller="BarchartCtrl">
+          <canvas id="bar" class="chart chart-bar" data="data"
+                  labels="labels" legend="true" series="series"></canvas>
+        </div>
+        <div class="panel-footer">On Monthly Basis</div>
+      </div>
+
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+
+        <div class="panel-heading">
+          Billable Vs Bench
+        </div>
+
+        <div class="panel-body" ng-controller="LineCtrl">
+          <canvas id="line" class="chart chart-line" data="data"
+                  labels="labels" legend="true" series="series"
+                  click="onClick">
+          </canvas>
+        </div>
+        <div class="panel-footer">On Weekly Basis</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          PDX Project
+        </div>
+        <div class="panel-body">
+          <img src="../../images/bar-chart-1.png" class="img-responsive"/>
+        </div>
+        <div class="panel-footer">One of the most Active Projects</div>
+      </div>
+
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Quick Office Project
+        </div>
+        <div class="panel-body">
+          <img src="../../images/bar-chart-2.png" class="img-responsive"/>
+        </div>
+        <div class="panel-footer">One of the most Active Projects</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          ECI Solution Project
+        </div>
+        <div class="panel-body">
+          <img src="../../images/bar-chart-3.png" class="img-responsive"/>
+        </div>
+        <div class="panel-footer">One of the most Active Projects</div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,71 @@
+<div class="container" ng-controller="OrganizationsListCtrl">
+
+  <div class="row">
+    <div class="col-md-12">
+      <form>
+        <div class="input-group input-group-lg">
+          <input type="text" class="form-control"/>
+
+          <div class="input-group-btn">
+            <button class="btn btn-default">
+              <span class="glyphicon glyphicon-filter"></span> Filter
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <br><br>
+   <div class="row">
+    <div class="col-xs-2">
+      <div class="input-group-btn">
+        <button class="btn btn-default" ui-sref="organizations.edit({'orgId':null})">
+          <span class="glyphicon glyphicon-plus"></span> Add Organization
+        </button>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-xs-12 col-md-4" ng-repeat="org in organizations">
+      <div class="panel-wrapper">
+        <div class="panel-title">
+          <a ui-sref="organizations.view({'orgId':org._id})">{{org.name}}</a>
+        </div>
+        <div class="panel-stage">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="panel-wrapper">
+                <div class="panel-title">
+                  Billable Vs Bench
+                </div>
+                <div class="panel-stage">
+                  <img src="images/area-chart.png" class="img-responsive">
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="panel-wrapper">
+                <div class="panel-title">
+                  Projects
+                </div>
+                <div class="panel-stage" ng-repeat="proj in org.projects">
+                  {{proj.name}}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-notes" ng-repeat="emp in org.employees">
+          {{emp.name}}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

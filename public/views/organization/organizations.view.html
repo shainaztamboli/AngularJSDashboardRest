@@ -1,0 +1,48 @@
+<div class="container" ng-controller="OrganizationsEditCtrl">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel-wrapper">
+        <div class="panel-title">
+          <div class="row">
+            <div class="col-xs-4">{{org.name}}</div>
+            <div class="col-xs-offset-8 col-xs-2"><a ui-sref="organizations.edit({'orgId':org._id})"><i class="glyphicon glyphicon-edit"></i> Edit</a></div>
+            <div class="col-xs-2"><a ng-click="deleteOrg()"><span class="glyphicon glyphicon-remove"></span> Delete</a></div>
+          </div>
+        </div>
+        <div class="panel-stage">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="panel-wrapper">
+                <div class="panel-title">
+                  Billable Vs Bench
+                </div>
+                <div class="panel-stage">
+                  <img src="images/area-chart.png" class="img-responsive">
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="panel-wrapper">
+                <div class="panel-title">
+                  Projects
+                </div>
+                <div class="panel-stage" ng-repeat="proj in org.projects">
+                  {{proj.name}}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-notes" ng-repeat="emp in org.employees">
+          {{emp.name}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
