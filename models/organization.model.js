@@ -27,15 +27,13 @@ var organizationSchema = new Schema({
     projects: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'project',
-            required: false
+            ref: 'project'
         }]
     ,
     employees: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'employee',
-            required: false
+            ref: 'employee'
         }]
 
 

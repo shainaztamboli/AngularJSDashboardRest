@@ -109,32 +109,48 @@ exports.updateOrg = function (req, res) {
     var projects = req.body.projects;
     projects.forEach(function (proj, index) {
         tasks.push(function (callback) {
-            var project = new Project(proj);
-            if(project._id==undefined) {
+            console.log('proj._id: '+proj._id);
+            if (proj._id == '' || proj._id == undefined) {
+                console.log("undefined")
+                var project = new Project(proj);
                 project.save(function (err, project) {
                     callback(err, {type: "project", value: project});
                 });
-            }else{
-                project.update(function (err, project) {
-                    callback(err, {type: "project", value: project});
+            } else {
+                console.log("proj._id"+proj._id)
+                Project.findOne({_id: proj._id}, function (err, project) {
+                    if (err) {
+                        console.log("Error while fetching project." + err);
+                    }
+                    if (project) {
+                        callback(err, {type: "project", value: project});
+                    } else {
+                        console.log("Error: project not found");
+                    }
                 });
             }
-
-
         });
     });
 
     var employees = req.body.employees;
     employees.forEach(function (emp, index) {
         tasks.push(function (callback) {
-            var employee = new Employee(emp);
-            if(employee._id == undefined) {
+            console.log('emp._id: '+emp._id);
+            if (emp._id == '' || emp._id == undefined) {
+                var employee = new Employee(emp);
                 employee.save(function (err, employee) {
                     callback(err, {type: "employee", value: employee});
                 });
-            }else{
-                employee.update(function (err, employee) {
-                    callback(err, {type: "employee", value: employee});
+            } else {
+                Employee.findOne({_id: emp._id}, function (err, employee) {
+                    if (err) {
+                        console.log("Error while fetching Employee." + err);
+                    }
+                    if (employee) {
+                        callback(err, {type: "employee", value: employee});
+                    } else {
+                        console.log("Error: Employee not found");
+                    }
                 });
             }
         });
