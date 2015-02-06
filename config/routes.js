@@ -4,6 +4,8 @@
 module.exports = function(app){
 
     require('../routes/organization.route.js')(app);
+    require('../routes/project.route.js')(app);
+    require('../routes/employee.route.js')(app);
 
     app.use('/api/*', function(req, res, next){
         res.json({'error':'No Such Service Present'}, 404);

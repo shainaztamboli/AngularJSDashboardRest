@@ -9,34 +9,25 @@ var organizationSchema = new Schema({
         type: String,
         required: true
     },
-    noOfPeople: {
+    total_people: {
         type: Number,
         default: 0,
         required: false
     },
-    billableCount: {
+    billable_headcount: {
         type: Number,
         default: 0,
         required: false
     },
-    benchCount: {
+    bench_strength: {
         type: Number,
         default: 0,
         required: false
     },
-    projects: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'project'
-        }]
-    ,
-    employees: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'employee'
-        }]
-
-
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'employee'
+    }
 })
 
 mongoose.model('organization', organizationSchema);

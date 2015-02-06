@@ -1,8 +1,6 @@
 /**
  * Created by shainazt on 2/4/2015.
  */
-var organizations = [];
-
 var mongoose = require('mongoose'),
     Organization = mongoose.model('organization'),
     Project = mongoose.model('project'),
@@ -11,54 +9,76 @@ var mongoose = require('mongoose'),
 
 exports.fetchAllOrgs = function (req, res, next) {
     Organization.find()
-        .populate('projects')
-        .populate('employees')
+        .populate('owner')
         .exec(function (err, organizations) {
             if (err) {
-                next(err);
+                console.log("Unable to fetch Organizations List.");
+                console.log(err);
+            } else {
+                var tasks = [];
+                organizations.forEach(function (org) {
+                    tasks.push(function (callback) {
+                        Project.find({belongs_to: org}, function (err, result) {
+                            if (err) {
+                                console.log("Error while fetching Projects." + err);
+                            }
+                            if (result) {
+                                org.projects = result;
+                                console.log('org: ' + org.projects);
+                                callback(err, org);
+                            } else {
+                                console.log("Error: Projects not found");
+                            }
+                        });
+                    });
+                });
+
+                async.parallel(
+                    tasks, function (err, results) {
+                        if (err) {
+                            console.log("Unable to fetch Projects.");
+                            console.log(err);
+                            next(err);
+                        } else {
+                            res.send(results);
+                        }
+                    });
+
             }
-            res.send(organizations);
         });
+
+
 }
 
 exports.createOrg = function (req, res) {
     var tasks = [];
-    var projects = req.body.projects;
-    projects.forEach(function (proj, index) {
+    var owner = req.body.owner;
+    if (owner != undefined) {
+        req.body.owner = undefined;
         tasks.push(function (callback) {
-            var project = new Project(proj);
-            project.save(function (err, project) {
-                callback(err, {type: "project", value: project});
+            Employee.findOne({_id: owner._id}, function (err, owner) {
+                if (err) {
+                    console.log("Error while fetching Employee." + err);
+                }
+                if (owner) {
+                    callback(err, {type: "employee", value: owner});
+                } else {
+                    console.log("Error: Employee not found");
+                }
             });
         });
-    });
+    }
 
-    var employees = req.body.employees;
-    employees.forEach(function (emp, index) {
-        tasks.push(function (callback) {
-            var employee = new Employee(emp);
-            employee.save(function (err, employee) {
-                callback(err, {type: "employee", value: employee});
-            });
-        });
-    });
     async.parallel(
-        tasks, function (err, results) {
+        tasks, function (err, result) {
             if (err) {
                 console.log("Unable to save Projects and Employees");
                 console.log(err);
             } else {
-                req.body.employees = [];
-                req.body.projects = [];
                 var org = new Organization(req.body);
-                results.forEach(function (result) {
-                    if (result.type === 'employee') {
-                        org.employees.push(result.value);
-                    }
-                    else if (result.type === 'project') {
-                        org.projects.push(result.value);
-                    }
-                });
+                if (result) {
+                    org.owner = result.value;
+                }
                 console.log(org);
                 org.save(function (err) {
                     if (err) {
@@ -81,8 +101,32 @@ exports.getByOrgId = function (req, res, next, id) {
                 next(err);
             }
             if (org) {
-                req.org = org;
-                next();
+                var tasks = [];
+                tasks.push(function (callback) {
+                    Project.find({belongs_to: org}, function (err, result) {
+                        if (err) {
+                            console.log("Projects not found for Org.")
+                            console.error(err);
+                        }
+                        if (result) {
+                            org.projects = result;
+                            req.org = org;
+                            next();
+
+                        }
+                    });
+                });
+                async.parallel(
+                    tasks, function (err, result) {
+                        if (err) {
+                            console.log("Unable to fetch Projects.");
+                            console.log(err);
+                            next(err);
+                        } else {
+                            res.send(result);
+                        }
+                    });
+
             } else {
                 var error = {
                     error: "Organization not found"
@@ -99,76 +143,39 @@ exports.getOrg = function (req, res) {
 exports.updateOrg = function (req, res) {
     var org = req.org;
     org.name = req.body.name;
-    org.noOfPeople = req.body.noOfPeople;
-    org.billableCount = req.body.billableCount;
-    org.benchCount = req.body.benchCount;
-    org.employees = [];
-    org.projects = [];
+    org.total_people = req.body.total_people;
+    org.billable_headcount = req.body.billable_headcount;
+    org.bench_strength = req.body.bench_strength;
 
     var tasks = [];
-    var projects = req.body.projects;
-    projects.forEach(function (proj, index) {
+    var owner = req.body.owner;
+    if (owner != undefined) {
+        org.owner = undefined;
+        console.log("owner: " + owner);
         tasks.push(function (callback) {
-            console.log('proj._id: '+proj._id);
-            if (proj._id == '' || proj._id == undefined) {
-                console.log("undefined")
-                var project = new Project(proj);
-                project.save(function (err, project) {
-                    callback(err, {type: "project", value: project});
-                });
-            } else {
-                console.log("proj._id"+proj._id)
-                Project.findOne({_id: proj._id}, function (err, project) {
-                    if (err) {
-                        console.log("Error while fetching project." + err);
-                    }
-                    if (project) {
-                        callback(err, {type: "project", value: project});
-                    } else {
-                        console.log("Error: project not found");
-                    }
-                });
-            }
+            Employee.findOne({_id: owner._id}, function (err, owner) {
+                if (err) {
+                    console.log("Error while fetching Employee." + err);
+                }
+                if (owner) {
+                    callback(err, {type: "employee", value: owner});
+                } else {
+                    console.log("Error: Employee not found");
+                }
+            });
         });
-    });
+    }
 
-    var employees = req.body.employees;
-    employees.forEach(function (emp, index) {
-        tasks.push(function (callback) {
-            console.log('emp._id: '+emp._id);
-            if (emp._id == '' || emp._id == undefined) {
-                var employee = new Employee(emp);
-                employee.save(function (err, employee) {
-                    callback(err, {type: "employee", value: employee});
-                });
-            } else {
-                Employee.findOne({_id: emp._id}, function (err, employee) {
-                    if (err) {
-                        console.log("Error while fetching Employee." + err);
-                    }
-                    if (employee) {
-                        callback(err, {type: "employee", value: employee});
-                    } else {
-                        console.log("Error: Employee not found");
-                    }
-                });
-            }
-        });
-    });
     async.parallel(
-        tasks, function (err, results) {
+        tasks, function (err, result) {
             if (err) {
                 console.log("Unable to save Projects and Employees");
                 console.log(err);
             } else {
-                results.forEach(function (result) {
-                    if (result.type === 'employee') {
-                        org.employees.push(result.value);
-                    }
-                    else if (result.type === 'project') {
-                        org.projects.push(result.value);
-                    }
-                });
+                if (result) {
+                    org.owner = result.value;
+                }
+
                 console.log(org);
                 org.save(function (err) {
                     if (err) {
