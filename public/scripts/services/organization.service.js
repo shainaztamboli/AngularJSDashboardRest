@@ -33,7 +33,7 @@ angular.module("organization")
     }
 
     service.updateOrg = function (orgToUpdate, success) {
-      $http.put(service.baseRestUrl+'/api/organization/' + orgToUpdate.id, orgToUpdate).success(function (result) {
+      $http.put(service.baseRestUrl+'/api/organization/' + orgToUpdate._id, orgToUpdate).success(function (result) {
         success(result);
       });
     }

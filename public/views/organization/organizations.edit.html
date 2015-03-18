@@ -1,72 +1,29 @@
 <div class="container">
   <div class="row">
-    <div class="col-xs-12">
-      <div class="panel-wrapper">
-        <div class="panel-title">
-          <div class="row">
-            <div class="col-xs-12">
-              <input type="text" ng-model="org.name">
-            </div>
-          </div>
-        </div>
-        <div class="panel-stage">
-          <div class="row">
-            <div class="col-xs-12">
-              <div class="panel-wrapper">
-                <div class="panel-title">
-                  Billable Vs Bench
-                </div>
-                <div class="panel-stage">
-                  TBD
-                </div>
-
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-12">
-              <input type="number" ng-model="org.noOfPeople" placeholder="No. Of People">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-12">
-              <input type="number" ng-model="org.billableCount" placeholder="Billable Count">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-12">
-              <input type="number" ng-model="org.benchCount" placeholder="Bench Count">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-12">
-              <div class="panel-wrapper">
-                <div class="panel-title">
-                  Projects
-                </div>
-                <div class="panel-stage">
-                  <ul ng-repeat="proj in org.projects">
-                    <li>
-                      <input type="text" ng-model="proj.name">
-                      <span class="glyphicon glyphicon-plus" ng-click="addProjects()" ng-show="$last"></span>
-                    </li>
-                  </ul>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="panel-notes">
-          <ul ng-repeat="emp in org.employees">
-            <li>
-              <input type="text" ng-model="emp.name">
-              <span class="glyphicon glyphicon-plus" ng-click="addEmployees()" ng-show="$last"></span>
-            </li>
-          </ul>
-        </div>
-      </div>
+    <div class="col-md-12">
+      <h1><i class="glyphicon glyphicon-heart"></i> {{title}}</h1>
     </div>
   </div>
-<button ng-click="saveOrg()">submit</button>
+  <div class="row">
+    <div class="col-md-8">
+      <form role="form">
+        <input type="text" ng-model="org.name" class="form-control"
+               placeholder="Organization Name" ng-show="!org.edit" required>
+        <label ng-hide="!org.edit">{{org.name}}</label>
+        <input type="number" ng-model="org.total_people" class="form-control" placeholder="No. Of People" required>
+
+        <input type="number" ng-model="org.billable_headcount" class="form-control" placeholder="Billable Count"
+               required>
+
+        <input type="number" ng-model="org.bench_strength" class="form-control" placeholder="Bench Count" required>
+
+        <select class="form-control" ng-model="org.owner" ng-options="emp._id as emp.name for emp in employees">
+          {{emp._id}}
+        </select>
+
+        <button type="reset" class="btn btn-default">Reset</button>
+        <button type="submit" class="btn btn-default" ng-click="saveOrg()">Submit</button>
+      </form>
+    </div>
+  </div>
 </div>

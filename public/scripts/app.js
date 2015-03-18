@@ -51,6 +51,54 @@ angular
         controller: "OrganizationsEditCtrl",
         url: "/edit/:orgId"
       })
+    $stateProvider
+      .state("projects", {
+        templateUrl: "../views/project/projects.html",
+        controller: "ProjectCtrl",
+        url: "/projects"
+      })
+    $stateProvider
+      .state("projects.list", {
+        templateUrl: "../views/project/projects.list.html",
+        controller: "ProjectListCtrl",
+        url: "/list"
+      })
+    $stateProvider
+      .state("projects.edit", {
+        templateUrl: "../views/project/projects.edit.html",
+        controller: "ProjectEditCtrl",
+        url: "/edit/:projectId"
+      })
+    $stateProvider
+      .state("projects.view", {
+        templateUrl: "../views/project/projects.view.html",
+        controller: "ProjectsViewCtrl",
+        url: "/view/:projectId"
+      })
+    $stateProvider
+      .state("employee", {
+        templateUrl: "../views/employee/employees.html",
+        controller: "EmployeeCtrl",
+        url: "/view/:employeeId"
+      })
+    $stateProvider
+      .state("employee.list", {
+        templateUrl: "../views/employee/employees.list.html",
+        controller: "EmployeeListCtrl",
+        url: "/list"
+      })
+    $stateProvider
+      .state("employee.view", {
+        templateUrl: "../views/employee/employees.view.html",
+        controller: "EmployeeViewCtrl",
+        url: "/view/:employeeId"
+      })
+    $stateProvider
+      .state("employee.edit", {
+        templateUrl: "../views/employee/employees.edit.html",
+        controller: "EmployeeEditCtrl",
+        url: "/edit/:employeeId"
+      })
 
 
   })
